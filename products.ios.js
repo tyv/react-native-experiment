@@ -49,7 +49,7 @@ var Products = React.createClass({
 
   renderProducts: function() {
     return this.state.products.map((item, index) => {
-      var img = item.image_urls && item.image_urls[0] || 'http://icons.iconarchive.com/icons/mazenl77/I-like-buttons-3a/512/Cute-Ball-Go-icon.png';
+      var img = item.image_urls && item.image_urls[0];
       return (
         <View style={styles.button} key={index}>
           <Image style={styles.img} source={{uri:img}} />
