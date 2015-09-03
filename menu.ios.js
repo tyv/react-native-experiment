@@ -15,7 +15,6 @@ var {
 
 var SubMenu = require('./submenu.ios.js');
 
-
 var Menu = React.createClass({
 
   getInitialState: function() {
@@ -25,14 +24,12 @@ var Menu = React.createClass({
   },
 
   componentWillMount: function() {
-    console.log('componentWillMount');
     this.getMenu();
   },
 
   getMenu: function() {
-    console.log('getMenu');
     var that = this;
-    fetch('http://bjornborg-staging.vaimo.com/en/appapi/menu/list/?website=3&tree=1')
+    fetch('http://bjornborg-staging.vaimo.com/en/appapi/menu/list/?website=3&tree=0')
       .then((response) => response.text())
       .then((responseText) => {
         console.log(responseText);
@@ -51,7 +48,7 @@ var Menu = React.createClass({
     this.props.navigator.push({
       title: cfg.name,
       component: SubMenu,
-      passProps: {}
+      passProps: {id: cfg.id}
     });
   },
 

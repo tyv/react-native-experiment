@@ -13,54 +13,45 @@ var {
   TouchableHighlight,
 } = React;
 
-var Products = require('./products.ios.js');
 
-
-var SubMenu = React.createClass({
+var Products = React.createClass({
 
   getInitialState: function() {
     return {
-      menu: undefined
+      products: undefined
     };
   },
 
   componentWillMount: function() {
-    this.getMenu();
+    this.getProducts();
   },
 
-  getMenu: function() {
+  getProducts: function() {
     var that = this;
-    var url = 'http://bjornborg-staging.vaimo.com/en/appapi/category/list/?website=3&detail=minimal&tree=0&category=' + this.props.id;
-    fetch(url)
-      .then((response) => response.text())
-      .then((responseText) => {
-        console.log(responseText);
-        that.setState({ menu: JSON.parse(responseText).result })
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
+    // var url = 'getProducts';
+    // fetch(url)
+    //   .then((response) => response.text())
+    //   .then((responseText) => {
+    //     console.log(responseText);
+    //     that.setState({ products: JSON.parse(responseText).result })
+    //   })
+    //   .catch((error) => {
+    //     console.warn(error);
+    //   });
+    //
+    setTimeout(() => { that.setState({ products: [{name: 'a'}, {name: 'b'}]}) }, 5000);
   },
 
   renderLoading: function() {
     return <Text>Loading...</Text>;
   },
 
-  onMenuPress: function(cfg) {
-    this.props.navigator.push({
-      title: cfg.name,
-      component: Products,
-      passProps: {id: cfg.id}
-    });
-
-  },
 
   renderMenu: function() {
-    return this.state.menu.map((item, index) => {
+    return this.state.products.map((item, index) => {
       return (
         <TouchableHighlight
-          key={index}
-          onPress={this.onMenuPress.bind(this, {id: item.entity_id, name: item.name})}>
+          key={index}>
           <Text>{ item.name }</Text>
         </TouchableHighlight>
       );
@@ -68,10 +59,9 @@ var SubMenu = React.createClass({
   },
 
   render: function() {
-    console.log('render');
     return (
       <View style={styles.container}>
-        { this.state.menu ? this.renderMenu() : this.renderLoading() }
+        { this.state.products ? this.renderMenu() : this.renderLoading() }
       </View>
     );
   }
@@ -96,4 +86,4 @@ var styles = StyleSheet.create({
   },
 });
 
-module.exports = SubMenu;
+module.exports = Products;
