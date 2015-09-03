@@ -15,6 +15,7 @@ var {
   Image
 } = React;
 
+var getJsonFromApi = require('./getJsonFromApi.js');
 
 var Products = React.createClass({
 
@@ -32,15 +33,11 @@ var Products = React.createClass({
     var that = this;
     var url = 'http://staging.bjornborg.vaimo.com/en/appapi/category/products/?website=3&detail=minimal&category=' + this.props.id;
 
-    fetch(url, { headers: { Authorization: 'Basic ' + btoa('demo:demo') } })
-      .then((response) => response.text())
-      .then((responseText) => {
-        console.log(responseText);
-        that.setState({ products: JSON.parse(responseText).result })
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
+    getJsonFromApi(url).then((json) => {
+      that.setState({ products: json })
+    }).catch((error) => {
+      console.warn(error);
+    });
   },
 
   renderLoading: function() {

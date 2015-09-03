@@ -57,4 +57,4 @@ var styles = StyleSheet.create({
 });
 
 
-AppRegistry.registerComponent('ReactNative', () => ReactNative);
+AppRegistry.registerComponent('AwesomeProject', () => ReactNative);

@@ -15,6 +15,8 @@ var {
 
 var Products = require('./products.ios.js');
 
+var getJsonFromApi = require('./getJsonFromApi.js');
+
 
 var SubMenu = React.createClass({
 
@@ -30,16 +32,18 @@ var SubMenu = React.createClass({
 
   getMenu: function() {
     var that = this;
-    var url = 'http://staging.bjornborg.vaimo.com/en/appapi/category/list/?website=3&detail=minimal&tree=0&category=' + this.props.id;
-    fetch(url, { headers: { Authorization: 'Basic ' + btoa('demo:demo') } })
-      .then((response) => response.text())
-      .then((responseText) => {
-        console.log(responseText);
-        that.setState({ menu: JSON.parse(responseText).result })
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
+    var url = 'http://staging.bjornborg.vaimo.com/en/appapi/menu/list/?website=3&tree=1';
+
+
+
+    getJsonFromApi(url).then((json) => {
+      json = json.filter(function(categorty) {
+        return categorty.entity_id === this.props.id
+      }.bind(this));
+      that.setState({ menu: json[0].children })
+    }).catch((error) => {
+      console.warn(error);
+    });
   },
 
   renderLoading: function() {
@@ -60,7 +64,7 @@ var SubMenu = React.createClass({
       return (
         <TouchableHighlight
           key={index}
-          onPress={this.onMenuPress.bind(this, {id: item.entity_id, name: item.name})}>
+          onPress={this.onMenuPress.bind(this, {id: item.entity_id || item.category_id, name: item.name})}>
           <Text>{ item.name }</Text>
         </TouchableHighlight>
       );
@@ -68,7 +72,6 @@ var SubMenu = React.createClass({
   },
 
   render: function() {
-    console.log('render');
     return (
       <View style={styles.container}>
         { this.state.menu ? this.renderMenu() : this.renderLoading() }

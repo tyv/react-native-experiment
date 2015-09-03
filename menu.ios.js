@@ -13,6 +13,8 @@ var {
   TouchableHighlight,
 } = React;
 
+var getJsonFromApi = require('./getJsonFromApi.js');
+
 var SubMenu = require('./submenu.ios.js');
 
 var Menu = React.createClass({
@@ -29,15 +31,13 @@ var Menu = React.createClass({
 
   getMenu: function() {
     var that = this;
-    fetch('http://staging.bjornborg.vaimo.com/en/appapi/menu/list/?website=3&tree=0', { headers: { Authorization: 'Basic ' + btoa('demo:demo') } })
-      .then((response) => response.text())
-      .then((responseText) => {
-        console.log(responseText);
-        that.setState({ menu: JSON.parse(responseText).result })
-      })
-      .catch((error) => {
-        console.warn(error);
+    getJsonFromApi('http://staging.bjornborg.vaimo.com/en/appapi/menu/list/?website=3&tree=1').then((json) => {
+      json = json.filter(function(category) {
+        return category.children && category.children.length;
       });
+      console.log(json);
+      that.setState({ menu: json })
+    })
   },
 
   renderLoading: function() {
@@ -65,7 +65,6 @@ var Menu = React.createClass({
   },
 
   render: function() {
-    console.log('render');
     return (
       <View style={styles.container}>
         { this.state.menu ? this.renderMenu() : this.renderLoading() }
