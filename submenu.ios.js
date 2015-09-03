@@ -30,8 +30,8 @@ var SubMenu = React.createClass({
 
   getMenu: function() {
     var that = this;
-    var url = 'http://bjornborg-staging.vaimo.com/en/appapi/category/list/?website=3&detail=minimal&tree=0&category=' + this.props.id;
-    fetch(url)
+    var url = 'http://staging.bjornborg.vaimo.com/en/appapi/category/list/?website=3&detail=minimal&tree=0&category=' + this.props.id;
+    fetch(url, { headers: { Authorization: 'Basic ' + btoa('demo:demo') } })
       .then((response) => response.text())
       .then((responseText) => {
         console.log(responseText);

@@ -29,7 +29,7 @@ var Menu = React.createClass({
 
   getMenu: function() {
     var that = this;
-    fetch('http://bjornborg-staging.vaimo.com/en/appapi/menu/list/?website=3&tree=0')
+    fetch('http://staging.bjornborg.vaimo.com/en/appapi/menu/list/?website=3&tree=0', { headers: { Authorization: 'Basic ' + btoa('demo:demo') } })
       .then((response) => response.text())
       .then((responseText) => {
         console.log(responseText);

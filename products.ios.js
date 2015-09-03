@@ -9,8 +9,10 @@ var {
   AppRegistry,
   StyleSheet,
   Text,
-  View,
+  ScrollView,
   TouchableHighlight,
+  View,
+  Image
 } = React;
 
 
@@ -28,62 +30,85 @@ var Products = React.createClass({
 
   getProducts: function() {
     var that = this;
-    // var url = 'getProducts';
-    // fetch(url)
-    //   .then((response) => response.text())
-    //   .then((responseText) => {
-    //     console.log(responseText);
-    //     that.setState({ products: JSON.parse(responseText).result })
-    //   })
-    //   .catch((error) => {
-    //     console.warn(error);
-    //   });
-    //
-    setTimeout(() => { that.setState({ products: [{name: 'a'}, {name: 'b'}]}) }, 5000);
+    var url = 'http://staging.bjornborg.vaimo.com/en/appapi/category/products/?website=3&detail=minimal&category=' + this.props.id;
+
+    fetch(url, { headers: { Authorization: 'Basic ' + btoa('demo:demo') } })
+      .then((response) => response.text())
+      .then((responseText) => {
+        console.log(responseText);
+        that.setState({ products: JSON.parse(responseText).result })
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
   },
 
   renderLoading: function() {
     return <Text>Loading...</Text>;
   },
 
-
-  renderMenu: function() {
+  renderProducts: function() {
     return this.state.products.map((item, index) => {
+      var img = item.image_urls && item.image_urls[0] || 'http://icons.iconarchive.com/icons/mazenl77/I-like-buttons-3a/512/Cute-Ball-Go-icon.png';
       return (
-        <TouchableHighlight
-          key={index}>
-          <Text>{ item.name }</Text>
-        </TouchableHighlight>
+        <View style={styles.button} key={index}>
+          <Image style={styles.img} source={{uri:img}} />
+          <Text>{ item.name + ' ' + item.final_price }</Text>
+        </View>
       );
     })
   },
 
   render: function() {
     return (
-      <View style={styles.container}>
-        { this.state.products ? this.renderMenu() : this.renderLoading() }
-      </View>
+      <ScrollView
+        scrollEventThrottle={200}
+        contentInset={{top: -50}}
+        style={styles.scrollView}
+        >
+        { this.state.products ? this.renderProducts() : this.renderLoading() }
+      </ScrollView>
     );
   }
 });
 
 var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  scrollView: {
     backgroundColor: '#F5FCFF',
+    height: 300,
   },
-  welcome: {
+  horizontalScrollView: {
+    height: 120,
+  },
+  containerPage: {
+    height: 50,
+    width: 50,
+    backgroundColor: '#527FE4',
+    padding: 5,
+  },
+  text: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    color: '#888888',
+    left: 80,
+    top: 20,
+    height: 40,
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  button: {
+    margin: 7,
+    padding: 5,
+    alignItems: 'center',
+    backgroundColor: '#eaeaea',
+    borderRadius: 3,
   },
+  buttonContents: {
+    flexDirection: 'row',
+    width: 64,
+    height: 64,
+  },
+  img: {
+    width: 64,
+    height: 64,
+  }
 });
 
 module.exports = Products;
