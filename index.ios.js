@@ -11,82 +11,50 @@ var {
   Text,
   View,
   TouchableHighlight,
+  NavigatorIOS
 } = React;
 
+var Menu = require('./menu.ios.js');
 
 var ReactNative = React.createClass({
-
   getInitialState: function() {
     return {
-      menu: undefined
+      loaded: true
     };
   },
 
-  componentWillMount: function() {
-    console.log('componentWillMount');
-    this.getMenu();
-  },
-
-  getMenu: function() {
-    console.log('getMenu');
-    var that = this;
-    fetch('http://bjornborg-staging.vaimo.com/en/appapi/menu/list/?website=3&tree=1')
-      .then((response) => response.text())
-      .then((responseText) => {
-        that.setState({ menu: JSON.parse(responseText).result })
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
-  },
-
-  renderLoading: function() {
-    return <Text>Loading...</Text>;
-  },
-
-  onMenuPress: function(id) {
-    console.log(id);
-  },
-
-  renderMenu: function() {
-    return this.state.menu.map((item, index) => {
-      return (
-        <TouchableHighlight
-          key={index}
-          onPress={this.onMenuPress.bind(this, item.entity_id)}>
-          <Text>{ item.name }</Text>
-        </TouchableHighlight>
-      );
-    })
-  },
-
   render: function() {
-
-    return (
-      <View style={styles.container}>
-        { this.state.menu ? this.renderMenu() : this.renderLoading() }
-      </View>
-    );
+    return <NavigatorIOS
+            ref="nav"
+            style={styles.nav}
+            itemWrapperStyle={styles.navWrap}
+            initialRoute={{
+              title: "Main Page",
+              component: Menu,
+              passProps: {
+                a: 'b'
+              }
+            }} />
   }
 });
 
 var styles = StyleSheet.create({
-  container: {
+  navWrap: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    marginTop: 70
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
+  nav: {
+    flex: 1,
+  },
+  button: {
+    backgroundColor: "#009DDD",
+    padding: 10,
     margin: 10,
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  buttonText: {
+    color: "#fff"
+  }
 });
+
 
 AppRegistry.registerComponent('ReactNative', () => ReactNative);
