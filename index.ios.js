@@ -11,29 +11,10 @@ var {
   Text,
   View,
   TouchableHighlight,
-  NavigatorIOS
 } = React;
 
 
 var ReactNative = React.createClass({
-
-
-  render: function() {
-
-    return (
-        <NavigatorIOS
-          initialRoute={{
-            component: MyApp,
-            title: 'My View Title',
-            passProps: { myProp: 'foo' },
-          }}
-        />
-      );
-  }
-});
-
-
-var MyApp = React.createClass({
 
   getInitialState: function() {
     return {
@@ -82,13 +63,10 @@ var MyApp = React.createClass({
   render: function() {
 
     return (
-      <NavigatorIOS
-            ref="nav"
-            initialRoute={...}
-          />
+      <View style={styles.container}>
+        { this.state.menu ? this.renderMenu() : this.renderLoading() }
+      </View>
     );
-
-    this.state.menu ? this.renderMenu() : this.renderLoading();
   }
 });
 
